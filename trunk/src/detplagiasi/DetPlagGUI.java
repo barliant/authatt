@@ -63,6 +63,7 @@ public class DetPlagGUI extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         processB = new javax.swing.JButton();
         resetB = new javax.swing.JButton();
+        btnExit = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
@@ -120,6 +121,13 @@ public class DetPlagGUI extends javax.swing.JFrame {
             }
         });
 
+        btnExit.setText("Exit");
+        btnExit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExitActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -159,7 +167,9 @@ public class DetPlagGUI extends javax.swing.JFrame {
                                         .addComponent(kmeans))
                                     .addComponent(jLabel4)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addGap(152, 152, 152)
+                                        .addGap(21, 21, 21)
+                                        .addComponent(btnExit)
+                                        .addGap(58, 58, 58)
                                         .addComponent(processB)
                                         .addGap(62, 62, 62)
                                         .addComponent(resetB))
@@ -200,7 +210,8 @@ public class DetPlagGUI extends javax.swing.JFrame {
                 .addGap(33, 33, 33)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(processB)
-                    .addComponent(resetB))
+                    .addComponent(resetB)
+                    .addComponent(btnExit))
                 .addContainerGap(74, Short.MAX_VALUE))
         );
 
@@ -305,6 +316,10 @@ public class DetPlagGUI extends javax.swing.JFrame {
         docLoc.setText("");
         outputLoc.setText("");
     }//GEN-LAST:event_resetBActionPerformed
+
+    private void btnExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExitActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_btnExitActionPerformed
        /**
      * @param args the command line arguments
      */
@@ -345,6 +360,7 @@ public class DetPlagGUI extends javax.swing.JFrame {
     private javax.swing.JButton browseDataset;
     private javax.swing.JButton browseDoc;
     private javax.swing.JButton browseOutput;
+    private javax.swing.JButton btnExit;
     private javax.swing.ButtonGroup buttonGroup2;
     private javax.swing.ButtonGroup buttonGroup3;
     private javax.swing.ButtonGroup buttonGroup4;
