@@ -21,6 +21,7 @@ package detplagiasi;
 
 import java.io.*;
 import weka.core.*;
+import weka.core.Instance;
 
 /**
  * Builds an arff dataset from the documents in a given directory.
@@ -34,8 +35,20 @@ import weka.core.*;
  * @version 1.0
  */
 public class DocUjiToArff {
-
-  public Instances createDataset(String filepath, File file) throws Exception {
+    private Instance m_dokumen;
+    
+    public void DocUjiToArff() {
+        
+    }
+    
+    /*
+     * 
+    public void DocUjiToArff(String filepath, File file) throws Exception {
+        m_dokumen = this.createDataset(filepath, file);
+    }
+     */
+    
+  public Instance createDataset(String filepath, File file) throws Exception {
      
     FastVector atts = new FastVector(2);
     atts.addElement(new Attribute("filename", (FastVector) null));
@@ -47,6 +60,8 @@ public class DocUjiToArff {
      */
     String a = file.getName();
     Instances data = new Instances(filepath, atts, 0);
+    Instance oneDocument = null;
+            
     //Instances data = new Instances("text_files_in_" + directoryPath, atts, 0);
     File dir = new File(filepath);
     //String[] files = dir.list();
@@ -68,15 +83,15 @@ public class DocUjiToArff {
             newInst[1] = (double)data.attribute(1).addStringValue(txtStr.toString());
             //data.add(new Instance(1.0, newInst));
             data.add(new Instance(1.0, newInst));
+            oneDocument = new Instance(1.0, newInst);
             } 
         catch (Exception e) {
             System.err.println("failed to convert file: " + a );
 	}
     }
     
-      
-    
-    return data;
+    //return data;
+    return oneDocument;
   }
   
   /*public static void main(String[] args) {

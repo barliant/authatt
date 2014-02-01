@@ -32,8 +32,18 @@ public class EMCluster {
     public static void setUjiArff(Instances ujiArff1){
         ujiArff = ujiArff1;
     }
+    
     public static void docujiarff(File file) throws Exception {
         String hehe = file.getCanonicalPath();
+        /*
+        DocUjiToArff sample = new DocUjiToArff();
+        ujiArff = sample.createDataset(hehe, file);
+        
+        System.out.println("DEBUG: ujiArff");
+        System.out.println(ujiArff);
+        
+         * 
+         */
         String filePath = hehe.substring(0,hehe.lastIndexOf(File.separator));
 
         TextDirectoryToArff td = new TextDirectoryToArff();
@@ -70,6 +80,8 @@ public class EMCluster {
     }
     public void startCluster(File[] file) throws Exception {
         TextDirectoryToArff td = new TextDirectoryToArff();
+        int klaster;
+        
         String addd = Container.getAddress();
             if(addd != null){
                 try {
@@ -117,7 +129,10 @@ public class EMCluster {
                         cl   = new EM();
                         out.write("\r\n");
                         cl.buildClusterer(data);
-                        //cl.clusterInstance(getUjiArff());
+                        klaster = cl.clusterInstance(getUjiArff().firstInstance());
+                        
+                        System.out.println("Dokumen uji ada di cluster: " + klaster);
+                        
                         //Instance dokumenUji = null;
                         //int kelompok;
                         //kelompok = cl.clusterInstance(dokumenUji);
