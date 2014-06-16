@@ -1,0 +1,9 @@
+TODO
+
+- Mempelajari koneksi database, untuk penyimpanan data-data atribut dokumen ke
+  dalam database.
+- Tampilan output hasil klaster.
+- Menampilkan dokumen uji termasuk ke klaster mana.
+- Menampilkan dokumen-dokumen apa saja yang ada dalam setiap klaster.
+- Menunjukkan perbandingan fitur dalam dokumen uji dengan fitur-fitur dalam
+  dokumen pada klaster yang relevan.
