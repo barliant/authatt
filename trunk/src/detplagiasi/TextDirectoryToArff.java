@@ -49,8 +49,17 @@ public class TextDirectoryToArff {
     Instances data = new Instances("text_files_in_" + directoryPath, atts, 0);
     File dir = new File(directoryPath);
     String[] files = dir.list();
+    //create file a untuk menampung name file dari instance yang terkait
+    //FileWriter fstream = new FileWriter(directoryPath+"\\cluster detail.txt");
+    BufferedWriter out = null;
+    out = new BufferedWriter(new FileWriter(directoryPath+"\\cluster detail.txt"));
+    
+    
     for (int i = 0; i < files.length; i++) {
       if (files[i].endsWith(".txt")) {
+          out.write("file ke "+(i+1)+": "+files[i]);
+          System.out.println("processed files:"+files[i]);
+          out.write("file ke "+(i+1)+": "+files[i]);
 	try {
             double[] newInst = new double[2];
             newInst[0] = (double)data.attribute(0).addStringValue(files[i]);
@@ -66,8 +75,16 @@ public class TextDirectoryToArff {
                 txtStr.append((char)c);
             }
             newInst[1] = (double)data.attribute(1).addStringValue(txtStr.toString());
+            try{
+                out.write("file ke "+(i+1)+": "+files[i]);
+                System.out.println("success");
+            }catch(Exception d){
+                System.err.println(d.getLocalizedMessage());
+            }
+            //input pada file a nama file dari instance
             //data.add(new Instance(1.0, newInst));
             data.add(new Instance(1.0, newInst));
+            //data.renameAttributeValue(data.attribute("att_name_in_data2"),"att_value_in_data2","att_value_in_data1");
             } 
         catch (Exception e) {
             System.err.println("failed to convert file: " + directoryPath + File.separator + files[i]);

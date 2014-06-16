@@ -42,14 +42,9 @@ public class Container {
       String absolutePath = file.getAbsolutePath();
       String filePath = absolutePath.substring(0,absolutePath.lastIndexOf(File.separator));
       setAddress(filePath);
-      //System.out.println(filePath);
       setFName(absolutePath);
       test(file);
-      //System.out.println("hehehe");
-      //System.out.println(outFName.getName());
-      //System.out.println(outFName.getCanonicalPath()); --correct till here heckity @ 2:10am
       test2(file);
-      //System.out.println("test2 success");
       return outFName.getName();
   }
   public static void test(File file) throws Exception{
@@ -98,30 +93,25 @@ public class Container {
   }
   public static void test2(File file) throws Exception{
       Tika tika = new Tika();
-    //String text = tika.parseToString(new File(file));
       BufferedReader inputStream = null;
       PrintWriter outputStream = null;
       outFName = getoutFName();
-      //System.out.println("heeee");
       try {
-      //System.out.println("inFname : " +inFName );//inFname : path file yang akan diproses
-      //System.out.println("outfname : " +outFName );//outfname : path file yang sudah ganti txt
-      inputStream = new BufferedReader(tika.parse(new File(inFName)));
-      outputStream = new PrintWriter(new FileWriter(outFName));
+        inputStream = new BufferedReader(tika.parse(new File(inFName)));
+        outputStream = new PrintWriter(new FileWriter(outFName));
 
-      String line;
-      int lineCtr = 0;
-      int lenStr = 0;
-      while ((line = inputStream.readLine()) != null) {
-        outputStream.println(line);
-        lenStr += line.length();
-        lineCtr++;
-        outputStream.flush();
+        String line;
+        int lineCtr = 0;
+        int lenStr = 0;
+        while ((line = inputStream.readLine()) != null) {
+          outputStream.println(line);
+          lenStr += line.length();
+          lineCtr++;
+          outputStream.flush();
       }
       System.out.println("\t>> DEBUG: " + outFName + ": " + lenStr);
       System.out.println("\t>> DEBUG: " + lineCtr + " lines were saved.");
       System.out.println("\t>> DEBUG: " + outFName);
-      //String haha ="File "+inFName+ " berhasil diproses.\n";
       
     }
     
@@ -134,16 +124,10 @@ public class Container {
   }
   public static void simpanFile(File file) throws Exception {
     inFName = file.getCanonicalPath();
-    //System.out.println("ininih" + inFName);
     fName = file.getName().toLowerCase();
-    //System.out.println("ini" + fName);
-    //System.out.println(outFName +"--");
     setoutFName(outFName);
     test(file);
-    //System.out.println("test simpanfile success.");
-    //System.out.println(outFName +"--2");
     test2(file);
-    //System.out.println("test2 simpanfile success.");
         
 
     }

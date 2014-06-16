@@ -5,6 +5,9 @@
 package detplagiasi;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import static java.nio.file.StandardCopyOption.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
@@ -105,7 +108,7 @@ public class DetPlagGUI extends javax.swing.JFrame {
             }
         });
 
-        jLabel6.setText("Description:");
+        jLabel6.setText("Description: Checking a document of an unknown author");
 
         processB.setText("Process");
         processB.addActionListener(new java.awt.event.ActionListener() {
@@ -164,7 +167,7 @@ public class DetPlagGUI extends javax.swing.JFrame {
                                         .addComponent(kmeans))
                                     .addComponent(jLabel4)
                                     .addComponent(jLabel3))
-                                .addGap(176, 260, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel6)
@@ -175,7 +178,7 @@ public class DetPlagGUI extends javax.swing.JFrame {
                                         .addComponent(resetB, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(69, 69, 69)
                                         .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(0, 0, Short.MAX_VALUE)))
+                                .addGap(0, 75, Short.MAX_VALUE)))
                         .addGap(50, 50, 50))))
         );
         layout.setVerticalGroup(
@@ -262,11 +265,16 @@ public class DetPlagGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_browseOutputActionPerformed
 
     private void processBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_processBActionPerformed
+        //try {
+        //    Files.copy(doc.toPath(), output.toPath());
+        
         if(!"".equals(datasetLoc.getText()) && (!"".equals(docLoc.getText())) &&(!"".equals(outputLoc.getText()))){
             try {
-                File folder;
+                File folder, ax;
                 folder = new File(datasetLoc.getText());
+                
                 File[] file = folder.listFiles();
+                File[] file2 = null;
                 System.out.println(file.length);
                 System.out.println(datasetPath);
                 System.out.println(docPath);
@@ -275,15 +283,37 @@ public class DetPlagGUI extends javax.swing.JFrame {
                 //dia harus nge get nama file dan lokasi doc uji buat diabawa ke class emclusterer
                 //DocUjiToArff docarff = new DocUjiToArff();
                 //docarff.createDataset(docPath, doc);
-                EMCluster.docujiarff(doc);
-                System.out.println("doctoarff success");
+                //EMCluster.docujiarff(doc);
+                //System.out.println("doctoarff success");
                 if(em.isSelected()){
                     Container.setAddress(outPath);
                     if(file.length!=0){
-                        for (int j=0; j<file.length; j++) {
-                            Container.simpanFile(file[j]);
+                        for (int j=0; j<file.length; j++) {   
+                            if(file[j].isFile()){
+                                Container.simpanFile(file[j]);   
+                            }
+                            else if(file[j].isDirectory()){
+                                ax= new File(file[j].getAbsolutePath());
+                                System.out.println("folder name : "+ax);
+                                file2 = file[j].listFiles();
+                                for(int l=0; l<file2.length;l++){
+                                    System.out.println("file ke "+(l+1)+":"+ file2[l]);
+                                    Container.simpanFile(file2[l]);
+                                }
+                                
+                            }
+                            
+                        } 
+                        File[] fileC = new File[file.length + file2.length];
+                        System.arraycopy(file, 0, fileC, 0, file.length);
+                        System.arraycopy(file2, 0, fileC, file.length, file2.length);
+                        //System.arraycopy(file2, 0, file, (file.length), file2.length);
+                        //System.arraycopy(file2, 0, file, destpos, length);
+                        for(int ss=0;ss<file.length;ss++){
+                            System.out.println(fileC[ss]);
                         }
-                        emclusterer.startCluster(file);
+                        
+                        emclusterer.startCluster(fileC);
                     }else{
                         JOptionPane.showMessageDialog(null, "Folder is empty", "Error", JOptionPane.ERROR_MESSAGE);
                     }
@@ -301,7 +331,7 @@ public class DetPlagGUI extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(null, "Please choose your algorithm", "Error", JOptionPane.ERROR_MESSAGE);
                 }
                 
-
+                
 
             } catch (Exception ex) {
                 //System.out.println(files.length);
@@ -310,6 +340,9 @@ public class DetPlagGUI extends javax.swing.JFrame {
         }else{
             JOptionPane.showMessageDialog(null,  "Fill out first", "Input Kosong", JOptionPane.ERROR_MESSAGE);
         }
+        //} catch (IOException ex) {
+        //    Logger.getLogger(DetPlagGUI.class.getName()).log(Level.SEVERE, null, ex);
+        //}
     }//GEN-LAST:event_processBActionPerformed
 
     private void resetBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetBActionPerformed
