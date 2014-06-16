@@ -101,6 +101,7 @@ public class EMCluster {
             try {
                 Instances dataset = td.createDataset(addd);
                 ArffSaver saver = new ArffSaver(); //create arff file
+                ArffSaver saver2 = new ArffSaver();
                 try (BufferedWriter out = new BufferedWriter(new FileWriter(addd + "\\output.txt"))){
                         out.write("Statistik:\n\n");
                         out.write("\r\n"+dataset.numInstances()+"\r\n");
@@ -118,11 +119,33 @@ public class EMCluster {
                         System.out.println(wt.getDelimiters());
                         filter.setInputFormat(dataset);
                         Instances dataFiltered = Filter.useFilter(dataset, filter);
+                        System.out.println("instances datafiltered");
+                        Instances dataTraining = new Instances(dataFiltered);
+                        System.out.println("instances dataTraining");
+                        Instances dataUji = new Instances(dataFiltered);
+                        System.out.println("Instances dataUji");
+                        for(int a=0; a<=dataFiltered.numInstances()-2;a++){
+                            dataUji.delete(0);
+                        }
+                        System.out.println("data uji"+dataUji.numInstances());
+                        //dataUji= new Instances(dataFiltered.lastInstance());
+                        dataTraining.delete(dataFiltered.numInstances()-1);
+                        System.out.println("data training" +dataTraining.numInstances());
+                        
 
-                        saver.setInstances(dataFiltered);
-                        File he = new File(addd + "\\cluster.arff");
+                        saver.setInstances(dataTraining);
+                        saver2.setInstances(dataUji);
+                        File he = new File(addd + "\\clusterTraining.arff");
+                        File hee = new File(addd + "\\clusterUji.arff");
                         saver.setFile(he);
                         saver.writeBatch();
+                        
+                        System.out.println("saver pertama");
+                        
+                        saver2.setFile(hee);
+                        saver2.writeBatch();
+                        
+                        System.out.println("Saver kedua");
                         
                         ClusterEvaluation eval;
                         Instances data;
@@ -150,6 +173,9 @@ public class EMCluster {
                         cl   = new EM();
                         out.write("\r\n");
                         cl.buildClusterer(data);
+                        System.out.println("jumlah kluster = "+cl.numberOfClusters());
+                        System.out.println("kluster = "+cl.clusterInstance(dataUji.instance(0)));
+                        
                         out.write("\r\n");
                         
                         eval = new ClusterEvaluation();
@@ -160,6 +186,7 @@ public class EMCluster {
                     }
                 catch(Exception d){
                     System.err.println(d.getLocalizedMessage());
+                    System.out.println("error1");
                 }
                 //setUjiArff(dataFiltered1);
                 setUjiArff(dataset);
@@ -168,6 +195,7 @@ public class EMCluster {
 
             } catch (Exception e) {
                 System.err.println(e.getMessage());
+                System.out.println("error2");
             }
 
             
