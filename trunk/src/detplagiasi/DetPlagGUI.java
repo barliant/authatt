@@ -11,13 +11,13 @@ import static java.nio.file.StandardCopyOption.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
 
 /**
  *
@@ -33,6 +33,8 @@ public class DetPlagGUI extends javax.swing.JFrame {
     String datasetPath, docPath, outPath;
     Container container = new Container();
     Clustering clusterer = new Clustering();
+    private JTable jTable1;
+    private JFrame jFrame1;
     private static final Object[][] rowData = {};
     private static final Object[] columnNames = {"No", "File Name","# Cluster"};
 
@@ -51,10 +53,6 @@ public class DetPlagGUI extends javax.swing.JFrame {
     private void initComponents() {
 
         AlgoGrp = new javax.swing.ButtonGroup();
-        buttonGroup2 = new javax.swing.ButtonGroup();
-        buttonGroup3 = new javax.swing.ButtonGroup();
-        buttonGroup4 = new javax.swing.ButtonGroup();
-        jFrame1 = new javax.swing.JFrame();
         jLabel1 = new javax.swing.JLabel();
         datasetLoc = new javax.swing.JTextField();
         browseDataset = new javax.swing.JButton();
@@ -72,20 +70,6 @@ public class DetPlagGUI extends javax.swing.JFrame {
         processB = new javax.swing.JButton();
         resetB = new javax.swing.JButton();
         btnExit = new javax.swing.JButton();
-
-        jFrame1.setMinimumSize(new java.awt.Dimension(500, 500));
-        jFrame1.setResizable(false);
-
-        javax.swing.GroupLayout jFrame1Layout = new javax.swing.GroupLayout(jFrame1.getContentPane());
-        jFrame1.getContentPane().setLayout(jFrame1Layout);
-        jFrame1Layout.setHorizontalGroup(
-            jFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 566, Short.MAX_VALUE)
-        );
-        jFrame1Layout.setVerticalGroup(
-            jFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 382, Short.MAX_VALUE)
-        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
@@ -335,7 +319,7 @@ public class DetPlagGUI extends javax.swing.JFrame {
         }else{
             JOptionPane.showMessageDialog(null,  "Fill out first", "Input Kosong", JOptionPane.ERROR_MESSAGE);
         }
-DefaultTableModel model;
+        /*DefaultTableModel model;
         model = new DefaultTableModel(rowData, columnNames);
         int huee = Clustering.array1.length;
         for(int hue=0;hue<huee;hue++){
@@ -346,26 +330,58 @@ DefaultTableModel model;
             model.addRow(new Object[]{nomer, fileName, clusterNum});
         }
         
-        JTable jTable1;
-        jTable1 = new JTable(model);
-        JLabel jLabel7 = new JLabel("No");
-        JLabel jLabel8 = new JLabel("Nama File");
-        JLabel jLabel9 = new JLabel("# Cluster");
+        */
+        jFrame1 = new JFrame("Result");
+        jFrame1.setSize(600,600);
+        jFrame1.setVisible(true);
+         
+         //columnNames = {"No","File Name","# Cluster"};
+        Object[][] rowData;
+        int huee = Clustering.array1.length;
+        rowData = new Object [huee][3];
+         
+            for(int hue=0;hue<huee;hue++){
+            int num = hue+1;
+            String nomer = String.valueOf(num);
+            String fileName = Clustering.array1[hue];
+            String clusterNum = String.valueOf(Clustering.array2[hue]);
+            //rowData.addRow(new Object[]{nomer, fileName, clusterNum});
+            rowData[hue][0] = nomer;
+            rowData[hue][1] = fileName;
+            rowData[hue][2] = clusterNum;
+        }
+        JTable jTable2 = new JTable (rowData, columnNames);
+        jTable2.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        jTable2.getColumnModel().getColumn(0).setPreferredWidth(40);
+        jTable2.getColumnModel().getColumn(1).setPreferredWidth(400);
+        jTable2.getColumnModel().getColumn(2).setPreferredWidth(70);
+        jTable2.setCellEditor(null);
+        JScrollPane scrollPane = new JScrollPane(jTable2);
+        jTable2.setFillsViewportHeight(true); 
+        jFrame1.add(scrollPane);
+        jFrame1.pack();
+         
+        
+        /*jTable1 = new JTable(model);
+        //JLabel jLabel7 = new JLabel("No");
+        //JLabel jLabel8 = new JLabel("Nama File");
+        //JLabel jLabel9 = new JLabel("# Cluster");
         jTable1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         jTable1.getColumnModel().getColumn(0).setPreferredWidth(40);
         jTable1.getColumnModel().getColumn(1).setPreferredWidth(400);
         jTable1.getColumnModel().getColumn(2).setPreferredWidth(50);
         jTable1.setCellEditor(null);
         jTable1.setBounds(30, 250, 490, 500);
-        jLabel7.setBounds(30, 60, 90, 50);
-        
+        //jLabel7.setBounds(30, 60, 90, 50);
+        jTable1.setFillsViewportHeight(true);
         JScrollPane scrollPane = new JScrollPane(jTable1);
-        add(scrollPane);
-	jTable1.setFillsViewportHeight(true);
-        jFrame1.add(jLabel7);
-        jFrame1.add(jTable1);
+	
+        jFrame1.add(scrollPane);
+        jFrame1.setTitle("Result");
+        //jFrame1.add(jLabel7);
         jFrame1.setVisible(true);
         jFrame1.pack();
+        */
         
 
         //} catch (IOException ex) {
@@ -424,13 +440,9 @@ DefaultTableModel model;
     private javax.swing.JButton browseDoc;
     private javax.swing.JButton browseOutput;
     private javax.swing.JButton btnExit;
-    private javax.swing.ButtonGroup buttonGroup2;
-    private javax.swing.ButtonGroup buttonGroup3;
-    private javax.swing.ButtonGroup buttonGroup4;
     private javax.swing.JTextField datasetLoc;
     private javax.swing.JTextField docLoc;
     private javax.swing.JRadioButton em;
-    private javax.swing.JFrame jFrame1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
