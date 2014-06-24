@@ -11,8 +11,13 @@ import static java.nio.file.StandardCopyOption.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 
 /**
  *
@@ -23,15 +28,14 @@ public class DetPlagGUI extends javax.swing.JFrame {
     /**
      * Creates new form NewJFrame
      */
-    
+
     File dataset, doc, output;
     String datasetPath, docPath, outPath;
     Container container = new Container();
-    EMCluster emclusterer = new EMCluster();
-    KMeansCluster kclusterer = new KMeansCluster();
-    
-    
-    
+    Clustering clusterer = new Clustering();
+    private static final Object[][] rowData = {};
+    private static final Object[] columnNames = {"No", "File Name","# Cluster"};
+
     public DetPlagGUI() {
         initComponents();
 
@@ -50,6 +54,7 @@ public class DetPlagGUI extends javax.swing.JFrame {
         buttonGroup2 = new javax.swing.ButtonGroup();
         buttonGroup3 = new javax.swing.ButtonGroup();
         buttonGroup4 = new javax.swing.ButtonGroup();
+        jFrame1 = new javax.swing.JFrame();
         jLabel1 = new javax.swing.JLabel();
         datasetLoc = new javax.swing.JTextField();
         browseDataset = new javax.swing.JButton();
@@ -67,6 +72,20 @@ public class DetPlagGUI extends javax.swing.JFrame {
         processB = new javax.swing.JButton();
         resetB = new javax.swing.JButton();
         btnExit = new javax.swing.JButton();
+
+        jFrame1.setMinimumSize(new java.awt.Dimension(500, 500));
+        jFrame1.setResizable(false);
+
+        javax.swing.GroupLayout jFrame1Layout = new javax.swing.GroupLayout(jFrame1.getContentPane());
+        jFrame1.getContentPane().setLayout(jFrame1Layout);
+        jFrame1Layout.setHorizontalGroup(
+            jFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 566, Short.MAX_VALUE)
+        );
+        jFrame1Layout.setVerticalGroup(
+            jFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 382, Short.MAX_VALUE)
+        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
@@ -166,10 +185,7 @@ public class DetPlagGUI extends javax.swing.JFrame {
                                         .addGap(36, 36, 36)
                                         .addComponent(kmeans))
                                     .addComponent(jLabel4)
-                                    .addComponent(jLabel3))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel3)
                                     .addComponent(jLabel6)
                                     .addGroup(layout.createSequentialGroup()
                                         .addGap(74, 74, 74)
@@ -237,7 +253,7 @@ public class DetPlagGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_browseDatasetActionPerformed
 
     private void browseDocActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseDocActionPerformed
-        JFileChooser docCh = new JFileChooser(); 
+        JFileChooser docCh = new JFileChooser();
         docCh.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
         int nilai = docCh.showOpenDialog(this);
         if(nilai==JFileChooser.APPROVE_OPTION){
@@ -251,7 +267,7 @@ public class DetPlagGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_browseDocActionPerformed
 
     private void browseOutputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseOutputActionPerformed
-        JFileChooser outputCh = new JFileChooser(); 
+        JFileChooser outputCh = new JFileChooser();
         outputCh.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         int nilai = outputCh.showOpenDialog(this);
         if(nilai==JFileChooser.APPROVE_OPTION){
@@ -265,14 +281,11 @@ public class DetPlagGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_browseOutputActionPerformed
 
     private void processBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_processBActionPerformed
-        //try {
-        //    Files.copy(doc.toPath(), output.toPath());
-        
         if(!"".equals(datasetLoc.getText()) && (!"".equals(docLoc.getText())) &&(!"".equals(outputLoc.getText()))){
             try {
                 File folder, ax;
                 folder = new File(datasetLoc.getText());
-                
+                Container.setAddress(outPath);
                 File[] file = folder.listFiles();
                 File[] file2 = null;
                 System.out.println(file.length);
@@ -280,58 +293,40 @@ public class DetPlagGUI extends javax.swing.JFrame {
                 System.out.println(docPath);
                 String a = Container.docUji(doc);
                 System.out.println(a);
-                //dia harus nge get nama file dan lokasi doc uji buat diabawa ke class emclusterer
-                //DocUjiToArff docarff = new DocUjiToArff();
-                //docarff.createDataset(docPath, doc);
-                //EMCluster.docujiarff(doc);
-                //System.out.println("doctoarff success");
-                if(em.isSelected()){
-                    Container.setAddress(outPath);
-                    if(file.length!=0){
-                        for (int j=0; j<file.length; j++) {   
-                            if(file[j].isFile()){
-                                Container.simpanFile(file[j]);   
-                            }
-                            else if(file[j].isDirectory()){
-                                ax= new File(file[j].getAbsolutePath());
-                                System.out.println("folder name : "+ax);
-                                file2 = file[j].listFiles();
-                                for(int l=0; l<file2.length;l++){
-                                    System.out.println("file ke "+(l+1)+":"+ file2[l]);
-                                    Container.simpanFile(file2[l]);
-                                }
-                                
-                            }
-                            
-                        } 
-                        File[] fileC = new File[file.length + file2.length];
-                        System.arraycopy(file, 0, fileC, 0, file.length);
-                        System.arraycopy(file2, 0, fileC, file.length, file2.length);
-                        //System.arraycopy(file2, 0, file, (file.length), file2.length);
-                        //System.arraycopy(file2, 0, file, destpos, length);
-                        for(int ss=0;ss<file.length;ss++){
-                            System.out.println(fileC[ss]);
-                        }
-                        
-                        emclusterer.startCluster(fileC);
-                    }else{
-                        JOptionPane.showMessageDialog(null, "Folder is empty", "Error", JOptionPane.ERROR_MESSAGE);
-                    }
-                }
-                else if(kmeans.isSelected()){
-                    container.setAddress(outPath);
-                    if(file.length!=0){
-                        for (int j=0; j<file.length; j++){
+                if(file.length!=0){
+                    for (int j=0; j<file.length; j++) {
+                        if(file[j].isFile()){
                             Container.simpanFile(file[j]);
                         }
-                        kclusterer.startCluster(file);
+                        else if(file[j].isDirectory()){
+                            ax= new File(file[j].getAbsolutePath());
+                            System.out.println("folder name : "+ax);
+                            file2 = file[j].listFiles();
+                            for(int l=0; l<file2.length;l++){
+                                System.out.println("file ke "+(l+1)+":"+ file2[l]);
+                                Container.simpanFile(file2[l]);
+                            }
+                        }
                     }
+                    File[] fileC = new File[file.length + file2.length];
+                    System.arraycopy(file, 0, fileC, 0, file.length);
+                    System.arraycopy(file2, 0, fileC, file.length, file2.length);
+                    for(int ss=0;ss<file.length;ss++){
+                        System.out.println(fileC[ss]);
+                    }
+                    if(em.isSelected()){
+                        clusterer.method=1;
+                        clusterer.startCluster(fileC);
+                        //a =clusterer.td.fileName[1];
+                    }else if(kmeans.isSelected()){
+                        clusterer.method=2;
+                        clusterer.startCluster(fileC);
+                    }else{
+                        JOptionPane.showMessageDialog(null, "Please choose your algorithm", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                }else{
+                    JOptionPane.showMessageDialog(null, "Folder is empty", "Error", JOptionPane.ERROR_MESSAGE);
                 }
-                else{
-                    JOptionPane.showMessageDialog(null, "Please choose your algorithm", "Error", JOptionPane.ERROR_MESSAGE);
-                }
-                
-                
 
             } catch (Exception ex) {
                 //System.out.println(files.length);
@@ -340,10 +335,44 @@ public class DetPlagGUI extends javax.swing.JFrame {
         }else{
             JOptionPane.showMessageDialog(null,  "Fill out first", "Input Kosong", JOptionPane.ERROR_MESSAGE);
         }
+DefaultTableModel model;
+        model = new DefaultTableModel(rowData, columnNames);
+        int huee = Clustering.array1.length;
+        for(int hue=0;hue<huee;hue++){
+            int num = hue+1;
+            String nomer = String.valueOf(num);
+            String fileName = Clustering.array1[hue];
+            String clusterNum = String.valueOf(Clustering.array2[hue]);
+            model.addRow(new Object[]{nomer, fileName, clusterNum});
+        }
+        
+        JTable jTable1;
+        jTable1 = new JTable(model);
+        JLabel jLabel7 = new JLabel("No");
+        JLabel jLabel8 = new JLabel("Nama File");
+        JLabel jLabel9 = new JLabel("# Cluster");
+        jTable1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        jTable1.getColumnModel().getColumn(0).setPreferredWidth(40);
+        jTable1.getColumnModel().getColumn(1).setPreferredWidth(400);
+        jTable1.getColumnModel().getColumn(2).setPreferredWidth(50);
+        jTable1.setCellEditor(null);
+        jTable1.setBounds(30, 250, 490, 500);
+        jLabel7.setBounds(30, 60, 90, 50);
+        
+        JScrollPane scrollPane = new JScrollPane(jTable1);
+        add(scrollPane);
+	jTable1.setFillsViewportHeight(true);
+        jFrame1.add(jLabel7);
+        jFrame1.add(jTable1);
+        jFrame1.setVisible(true);
+        jFrame1.pack();
+        
+
         //} catch (IOException ex) {
         //    Logger.getLogger(DetPlagGUI.class.getName()).log(Level.SEVERE, null, ex);
         //}
     }//GEN-LAST:event_processBActionPerformed
+
 
     private void resetBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetBActionPerformed
         datasetLoc.setText("");
@@ -361,7 +390,7 @@ public class DetPlagGUI extends javax.swing.JFrame {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -401,6 +430,7 @@ public class DetPlagGUI extends javax.swing.JFrame {
     private javax.swing.JTextField datasetLoc;
     private javax.swing.JTextField docLoc;
     private javax.swing.JRadioButton em;
+    private javax.swing.JFrame jFrame1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

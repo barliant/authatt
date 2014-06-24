@@ -40,8 +40,8 @@ public class Container {
   }
   public static String docUji(File file) throws Exception{
       String absolutePath = file.getAbsolutePath();
-      String filePath = absolutePath.substring(0,absolutePath.lastIndexOf(File.separator));
-      setAddress(filePath);
+      //String filePath = absolutePath.substring(0,absolutePath.lastIndexOf(File.separator));
+      setAddress(address1);
       setFName(absolutePath);
       test(file);
       test2(file);
@@ -50,9 +50,6 @@ public class Container {
   public static void test(File file) throws Exception{
     inFName = getFName();
     fName = file.getName().toLowerCase();
-    //System.out.println("test infname output : "+inFName);//path dokumen asli
-    //System.out.println("test fname output : "+fName);//nama dokumen asli
-    //System.out.println("test address1 output : "+address1);
 
     if (inFName.endsWith(".docx")) {
         outFName = new File(address1 + "\\" + fName.replace(".docx", ".txt"));

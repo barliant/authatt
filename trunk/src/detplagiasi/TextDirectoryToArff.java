@@ -35,12 +35,14 @@ import java.util.ArrayList;
  * @version 1.0
  */
 public class TextDirectoryToArff {
+    String[] fileName = new String[999999];
 
   public Instances createDataset(String directoryPath) throws Exception {
      
     FastVector atts = new FastVector(2);
     atts.addElement(new Attribute("filename", (FastVector) null));
     atts.addElement(new Attribute("contents", (FastVector) null));
+    
     /*
     ArrayList atts = new ArrayList(2);
     atts.addElement(new Attribute("filename", (ArrayList) null));
@@ -59,6 +61,7 @@ public class TextDirectoryToArff {
       if (files[i].endsWith(".txt")) {
           out.write("file ke "+(i+1)+": "+files[i]);
           System.out.println("processed files:"+files[i]);
+          fileName[i] = files[i];
           out.write("file ke "+(i+1)+": "+files[i]);
 	try {
             double[] newInst = new double[2];
