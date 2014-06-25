@@ -31,11 +31,13 @@ public class Clustering {
 
     static Instances ujiArff, dataUji, dataTraining;
     private static File arffName;
-    int a, klaster, method;
+    int a, method;
+    static int noClusterUji;
     String addd;
     TextDirectoryToArff td = new TextDirectoryToArff();
     static String[] array1;
     static int[] array2;
+    
     //public DefaultTableModel resultModel;
     Object[] hasil = {"No","File Name","# of Cluster"};
 
@@ -183,6 +185,7 @@ public class Clustering {
                 getDataUji();
                 getDataTraining();
                 System.out.println("jumlah kluster = "+cl.numberOfClusters());
+                noClusterUji = cl.clusterInstance(dataUji.instance(0));
                 System.out.println("kluster = "+cl.clusterInstance(dataUji.instance(0)));
                 for (int b=0; b<dataTraining.numInstances();b++){
                     System.out.print("file "+td.fileName[b]+" termasuk cluster ke ");

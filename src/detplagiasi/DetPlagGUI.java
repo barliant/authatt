@@ -11,13 +11,7 @@ import static java.nio.file.StandardCopyOption.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -29,14 +23,10 @@ public class DetPlagGUI extends javax.swing.JFrame {
      * Creates new form NewJFrame
      */
 
-    File dataset, doc, output;
+    static File dataset, doc, output;
     String datasetPath, docPath, outPath;
     Container container = new Container();
     Clustering clusterer = new Clustering();
-    private JTable jTable1;
-    private JFrame jFrame1;
-    private static final Object[][] rowData = {};
-    private static final Object[] columnNames = {"No", "File Name","# Cluster"};
 
     public DetPlagGUI() {
         initComponents();
@@ -300,10 +290,12 @@ public class DetPlagGUI extends javax.swing.JFrame {
                     }
                     if(em.isSelected()){
                         clusterer.method=1;
+                        ResultFrame.setMethod("EM Algorithm");
                         clusterer.startCluster(fileC);
                         //a =clusterer.td.fileName[1];
                     }else if(kmeans.isSelected()){
                         clusterer.method=2;
+                        ResultFrame.setMethod("Simple KMeans Algorithm");
                         clusterer.startCluster(fileC);
                     }else{
                         JOptionPane.showMessageDialog(null, "Please choose your algorithm", "Error", JOptionPane.ERROR_MESSAGE);
@@ -319,18 +311,7 @@ public class DetPlagGUI extends javax.swing.JFrame {
         }else{
             JOptionPane.showMessageDialog(null,  "Fill out first", "Input Kosong", JOptionPane.ERROR_MESSAGE);
         }
-        /*DefaultTableModel model;
-        model = new DefaultTableModel(rowData, columnNames);
-        int huee = Clustering.array1.length;
-        for(int hue=0;hue<huee;hue++){
-            int num = hue+1;
-            String nomer = String.valueOf(num);
-            String fileName = Clustering.array1[hue];
-            String clusterNum = String.valueOf(Clustering.array2[hue]);
-            model.addRow(new Object[]{nomer, fileName, clusterNum});
-        }
-        
-        */
+        /*
         jFrame1 = new JFrame("Result");
         jFrame1.setSize(600,600);
         jFrame1.setVisible(true);
@@ -360,33 +341,12 @@ public class DetPlagGUI extends javax.swing.JFrame {
         jTable2.setFillsViewportHeight(true); 
         jFrame1.add(scrollPane);
         jFrame1.pack();
-         
-        
-        /*jTable1 = new JTable(model);
-        //JLabel jLabel7 = new JLabel("No");
-        //JLabel jLabel8 = new JLabel("Nama File");
-        //JLabel jLabel9 = new JLabel("# Cluster");
-        jTable1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        jTable1.getColumnModel().getColumn(0).setPreferredWidth(40);
-        jTable1.getColumnModel().getColumn(1).setPreferredWidth(400);
-        jTable1.getColumnModel().getColumn(2).setPreferredWidth(50);
-        jTable1.setCellEditor(null);
-        jTable1.setBounds(30, 250, 490, 500);
-        //jLabel7.setBounds(30, 60, 90, 50);
-        jTable1.setFillsViewportHeight(true);
-        JScrollPane scrollPane = new JScrollPane(jTable1);
-	
-        jFrame1.add(scrollPane);
-        jFrame1.setTitle("Result");
-        //jFrame1.add(jLabel7);
-        jFrame1.setVisible(true);
-        jFrame1.pack();
         */
+        ResultFrame rf = new ResultFrame();
+        rf.setVisible(true);
         
-
-        //} catch (IOException ex) {
-        //    Logger.getLogger(DetPlagGUI.class.getName()).log(Level.SEVERE, null, ex);
-        //}
+        
+        
     }//GEN-LAST:event_processBActionPerformed
 
 
