@@ -32,7 +32,7 @@ public class Clustering {
     static Instances ujiArff, dataUji, dataTraining;
     private static File arffName;
     int a, method;
-    static int noClusterUji;
+    static int noClusterUji, totalCluster;
     String addd;
     TextDirectoryToArff td = new TextDirectoryToArff();
     static String[] array1;
@@ -186,6 +186,7 @@ public class Clustering {
                 getDataTraining();
                 System.out.println("jumlah kluster = "+cl.numberOfClusters());
                 noClusterUji = cl.clusterInstance(dataUji.instance(0));
+                totalCluster = cl.numberOfClusters();
                 System.out.println("kluster = "+cl.clusterInstance(dataUji.instance(0)));
                 for (int b=0; b<dataTraining.numInstances();b++){
                     System.out.print("file "+td.fileName[b]+" termasuk cluster ke ");
@@ -242,6 +243,8 @@ public class Clustering {
                 getDataUji();
                 System.out.println("jumlah kluster = "+cl.numberOfClusters());
                 System.out.println("kluster = "+cl.clusterInstance(dataUji.instance(0)));
+                noClusterUji = cl.clusterInstance(dataUji.instance(0));
+                totalCluster = cl.numberOfClusters();
                 for (int b=0; b<dataTraining.numInstances();b++){
                     System.out.print("file "+td.fileName[b]+" termasuk cluster ke ");
                     System.out.println(cl.clusterInstance(dataTraining.instance(b)));
