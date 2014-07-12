@@ -4,10 +4,8 @@
  */
 package detplagiasi;
 
+import java.awt.Cursor;
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import static java.nio.file.StandardCopyOption.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
@@ -27,10 +25,10 @@ public class DetPlagGUI extends javax.swing.JFrame {
     String datasetPath, docPath, outPath;
     Container container = new Container();
     Clustering clusterer = new Clustering();
+    
 
     public DetPlagGUI() {
         initComponents();
-
     }
 
     /**
@@ -136,22 +134,22 @@ public class DetPlagGUI extends javax.swing.JFrame {
                             .addComponent(jLabel1)
                             .addComponent(jLabel2))
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createSequentialGroup()
                                 .addComponent(datasetLoc)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(browseDataset))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                            .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(outputLoc, javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(docLoc, javax.swing.GroupLayout.Alignment.LEADING))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(browseOutput))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                            .addGroup(layout.createSequentialGroup()
                                 .addGap(0, 0, Short.MAX_VALUE)
                                 .addComponent(browseDoc))
-                            .addGroup(layout.createSequentialGroup()
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel5)
                                     .addGroup(layout.createSequentialGroup()
@@ -206,7 +204,7 @@ public class DetPlagGUI extends javax.swing.JFrame {
                     .addComponent(processB)
                     .addComponent(resetB)
                     .addComponent(btnExit))
-                .addContainerGap(74, Short.MAX_VALUE))
+                .addContainerGap(68, Short.MAX_VALUE))
         );
 
         pack();
@@ -255,6 +253,17 @@ public class DetPlagGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_browseOutputActionPerformed
 
     private void processBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_processBActionPerformed
+        
+        super.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        prosesApp();
+        super.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+        ResultFrame rf = new ResultFrame();
+        rf.setVisible(true);
+        
+        
+    }//GEN-LAST:event_processBActionPerformed
+
+    private void prosesApp(){
         if(!"".equals(datasetLoc.getText()) && (!"".equals(docLoc.getText())) &&(!"".equals(outputLoc.getText()))){
             try {
                 File folder, ax;
@@ -268,14 +277,13 @@ public class DetPlagGUI extends javax.swing.JFrame {
                 String a = Container.docUji(doc);
                 System.out.println(a);
                 if(file.length!=0){
-                    for (int j=0; j<file.length; j++) {
-                        if(file[j].isFile()){
-                            Container.simpanFile(file[j]);
-                        }
-                        else if(file[j].isDirectory()){
-                            ax= new File(file[j].getAbsolutePath());
+                    for (File file1 : file) {
+                        if (file1.isFile()) {
+                            Container.simpanFile(file1);
+                        } else if (file1.isDirectory()) {
+                            ax = new File(file1.getAbsolutePath());
                             System.out.println("folder name : "+ax);
-                            file2 = file[j].listFiles();
+                            file2 = file1.listFiles();
                             for(int l=0; l<file2.length;l++){
                                 System.out.println("file ke "+(l+1)+":"+ file2[l]);
                                 Container.simpanFile(file2[l]);
@@ -311,45 +319,8 @@ public class DetPlagGUI extends javax.swing.JFrame {
         }else{
             JOptionPane.showMessageDialog(null,  "Fill out first", "Input Kosong", JOptionPane.ERROR_MESSAGE);
         }
-        /*
-        jFrame1 = new JFrame("Result");
-        jFrame1.setSize(600,600);
-        jFrame1.setVisible(true);
-         
-         //columnNames = {"No","File Name","# Cluster"};
-        Object[][] rowData;
-        int huee = Clustering.array1.length;
-        rowData = new Object [huee][3];
-         
-            for(int hue=0;hue<huee;hue++){
-            int num = hue+1;
-            String nomer = String.valueOf(num);
-            String fileName = Clustering.array1[hue];
-            String clusterNum = String.valueOf(Clustering.array2[hue]);
-            //rowData.addRow(new Object[]{nomer, fileName, clusterNum});
-            rowData[hue][0] = nomer;
-            rowData[hue][1] = fileName;
-            rowData[hue][2] = clusterNum;
-        }
-        JTable jTable2 = new JTable (rowData, columnNames);
-        jTable2.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        jTable2.getColumnModel().getColumn(0).setPreferredWidth(40);
-        jTable2.getColumnModel().getColumn(1).setPreferredWidth(400);
-        jTable2.getColumnModel().getColumn(2).setPreferredWidth(70);
-        jTable2.setCellEditor(null);
-        JScrollPane scrollPane = new JScrollPane(jTable2);
-        jTable2.setFillsViewportHeight(true); 
-        jFrame1.add(scrollPane);
-        jFrame1.pack();
-        */
-        ResultFrame rf = new ResultFrame();
-        rf.setVisible(true);
-        
-        
-        
-    }//GEN-LAST:event_processBActionPerformed
-
-
+    }
+    
     private void resetBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetBActionPerformed
         datasetLoc.setText("");
         docLoc.setText("");

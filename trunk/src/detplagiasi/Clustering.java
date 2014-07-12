@@ -33,10 +33,12 @@ public class Clustering {
     private static File arffName;
     int a, method;
     static int noClusterUji, totalCluster;
-    String addd;
-    TextDirectoryToArff td = new TextDirectoryToArff();
+    public String addd;
+    Container ct = new Container();
+    static TextDirectoryToArff td = new TextDirectoryToArff();
     static String[] array1;
     static int[] array2;
+    static String[] test = new String[999999];
     
     //public DefaultTableModel resultModel;
     Object[] hasil = {"No","File Name","# of Cluster"};
@@ -133,12 +135,13 @@ public class Clustering {
                         System.out.println("Saver kedua");
                         
                         setArffFile(he);
+                        
                         if(method==1){
-                            EMClustering();
+                            //EMClustering();
+                            EMClustering emClustering = new EMClustering();
                         }else if(method==2){
-                            KMeansClustering();
+                            KMeansClustering kmeans = new KMeansClustering();
                         }
- 
                     }
                 catch(Exception d){
                     System.err.println(d.getLocalizedMessage());
@@ -154,120 +157,6 @@ public class Clustering {
 
         } else {
             System.out.println("NULLLLLLL");
-        }
-    }
-    
-    public void EMClustering(){
-        addd = Container.getAddress();
-        try {
-            ClusterEvaluation eval;
-            Instances data;
-            String[] options;
-            DensityBasedClusterer cl;
-            
-            File he = getArffFile();
-            data = new Instances(new BufferedReader(new FileReader(he)));
-            System.out.println("-----EM Clustering-----");
-            // normal
-           try(BufferedWriter out = new BufferedWriter(new FileWriter(addd + "\\output.txt",true))){
-                out.write("\r\n--> normal\r\n");
-                options    = new String[2];
-                options[0] = "-t";
-                options[1] = he.getAbsolutePath();
-                out.write("\r\n"+ClusterEvaluation.evaluateClusterer(new EM(), options)+"\r\n");
-                out.write("\r\n");
-
-                // manual call
-                out.write("\n--> manual\r\n");
-                cl   = new EM();
-                out.write("\r\n");
-                cl.buildClusterer(data);
-                getDataUji();
-                getDataTraining();
-                System.out.println("jumlah kluster = "+cl.numberOfClusters());
-                noClusterUji = cl.clusterInstance(dataUji.instance(0));
-                totalCluster = cl.numberOfClusters();
-                System.out.println("kluster = "+cl.clusterInstance(dataUji.instance(0)));
-                for (int b=0; b<dataTraining.numInstances();b++){
-                    System.out.print("file "+td.fileName[b]+" termasuk cluster ke ");
-                    array1[b] = td.fileName[b];
-                    array2[b] = cl.clusterInstance(dataTraining.instance(b));
-                    System.out.println(cl.clusterInstance(dataTraining.instance(b)));
-                    //simpan nilai instance ke dalam sebuah array int buat dikirim ke detplaggui
-                }
-
-                out.write("\r\n");
-
-                eval = new ClusterEvaluation();
-                eval.setClusterer(cl);
-                eval.evaluateClusterer(new Instances(data));
-                out.write("\r\n\n# of clusters: " + eval.getNumClusters());
-               
-                } catch (Exception e) {
-                    System.err.println(e.getMessage());
-                    System.out.println("error2 em cluster");
-                }
-            
-        } catch (IOException ex) {
-            Logger.getLogger(Clustering.class.getName()).log(Level.SEVERE, null, ex);
-            System.out.println("errorrrr null em");
-        }
-
-    }
-    
-    public void KMeansClustering(){
-        addd = Container.getAddress();
-        try {
-            ClusterEvaluation eval;
-            Instances data;
-            String[] options;
-            SimpleKMeans cl;
-            
-            File he = getArffFile();
-            data = new Instances(new BufferedReader(new FileReader(he)));
-            System.out.println("-----KMeans Clustering-----");
-            // normal
-            try(BufferedWriter out = new BufferedWriter(new FileWriter(addd + "\\output.txt",true))){
-                out.write("\r\n--> normal\r\n");
-                options    = new String[2];
-                options[0] = "-t";
-                options[1] = he.getAbsolutePath();
-                out.write("\r\n"+ClusterEvaluation.evaluateClusterer(new SimpleKMeans(), options)+"\r\n");
-                out.write("\r\n");
-
-                // manual call
-                out.write("\n--> manual\r\n");
-                cl   = new SimpleKMeans();
-                out.write("\r\n");
-                cl.buildClusterer(data);
-                getDataUji();
-                System.out.println("jumlah kluster = "+cl.numberOfClusters());
-                System.out.println("kluster = "+cl.clusterInstance(dataUji.instance(0)));
-                noClusterUji = cl.clusterInstance(dataUji.instance(0));
-                totalCluster = cl.numberOfClusters();
-                for (int b=0; b<dataTraining.numInstances();b++){
-                    System.out.print("file "+td.fileName[b]+" termasuk cluster ke ");
-                    System.out.println(cl.clusterInstance(dataTraining.instance(b)));
-                    array1[b] = td.fileName[b];
-                    array2[b] = cl.clusterInstance(dataTraining.instance(b));
-                    //simpan nilai instance ke dalam sebuah array int buat dikirim ke detplaggui
-                }
-
-                out.write("\r\n");
-
-                eval = new ClusterEvaluation();
-                eval.setClusterer(cl);
-                eval.evaluateClusterer(new Instances(data));
-                out.write("\r\n\n# of clusters: " + eval.getNumClusters());
-               
-                } catch (Exception e) {
-                    System.err.println(e.getMessage());
-                    System.out.println("error2 kmeans cluster");
-                }
-            
-        } catch (IOException ex) {
-            Logger.getLogger(Clustering.class.getName()).log(Level.SEVERE, null, ex);
-            System.out.println("errorrrr null kmeans");
         }
     }
 }

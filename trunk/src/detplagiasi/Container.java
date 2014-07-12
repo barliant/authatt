@@ -15,16 +15,16 @@ import java.io.PrintWriter;
 import org.apache.tika.Tika;
 
 public class Container {
-    static String address1;
+    static String address;
     static String inFName;
     static File outFName = null;
     static String fName;
     
   public static void setAddress(String address2){
-      address1 = address2; 
+      address = address2; 
   }
   public static String getAddress() {
-      return address1;
+      return address;
   }
   public static String getFName(){
       return inFName;
@@ -41,54 +41,54 @@ public class Container {
   public static String docUji(File file) throws Exception{
       String absolutePath = file.getAbsolutePath();
       //String filePath = absolutePath.substring(0,absolutePath.lastIndexOf(File.separator));
-      setAddress(address1);
+      setAddress(address);
       setFName(absolutePath);
-      test(file);
-      test2(file);
+      rename(file);
+      parser(file);
       return outFName.getName();
   }
-  public static void test(File file) throws Exception{
+  public static void rename(File file) throws Exception{
     inFName = getFName();
     fName = file.getName().toLowerCase();
 
     if (inFName.endsWith(".docx")) {
-        outFName = new File(address1 + "\\" + fName.replace(".docx", ".txt"));
+        outFName = new File(address + "\\" + fName.replace(".docx", ".txt"));
     }
     else if(inFName.endsWith(".pdf")){                    
-        outFName = new File(address1 + "\\" + fName.replace(".pdf",".txt"));
+        outFName = new File(address + "\\" + fName.replace(".pdf",".txt"));
     }
     else if (inFName.endsWith(".doc")) {
-        outFName = new File(address1 + "\\" + fName.replace(".doc", ".txt"));
+        outFName = new File(address + "\\" + fName.replace(".doc", ".txt"));
     }
     else if (inFName.endsWith(".pptx")) {
-        outFName = new File(address1 + "\\" + fName.replace(".pptx", ".txt"));
+        outFName = new File(address + "\\" + fName.replace(".pptx", ".txt"));
     }
     else if (inFName.endsWith(".ppt")) {
-        outFName = new File(address1 + "\\" + fName.replace(".ppt", ".txt"));
+        outFName = new File(address + "\\" + fName.replace(".ppt", ".txt"));
     }
     else if (inFName.endsWith(".odf")) {
-        outFName = new File(address1 + "\\" + fName.replace(".odf", ".txt"));
+        outFName = new File(address + "\\" + fName.replace(".odf", ".txt"));
     }
     else if (inFName.endsWith(".odt")) {
-        outFName = new File(address1 + "\\" + fName.replace(".odt", ".txt"));
+        outFName = new File(address + "\\" + fName.replace(".odt", ".txt"));
     }
     else if (inFName.endsWith(".rtf")) {
-        outFName = new File(address1 + "\\" + fName.replace(".rtf", ".txt"));
+        outFName = new File(address + "\\" + fName.replace(".rtf", ".txt"));
     }
     else if (inFName.endsWith(".xls")) {
-        outFName = new File(address1 + "\\" + fName.replace(".xls", ".txt"));
+        outFName = new File(address + "\\" + fName.replace(".xls", ".txt"));
     }
     else if (inFName.endsWith(".xlsx")) {
-        outFName = new File(address1 + "\\" + fName.replace(".xlsx", ".txt"));
+        outFName = new File(address + "\\" + fName.replace(".xlsx", ".txt"));
     }
     else if(inFName.endsWith (".txt")){
-        outFName = new File(address1 + "\\" + fName);
+        outFName = new File(address + "\\" + fName);
     }
     //System.out.println("test outfname : "+outFName);
     setoutFName(outFName);
     //System.out.println("test outfname output : "+outFName);
   }
-  public static void test2(File file) throws Exception{
+  public static void parser(File file) throws Exception{
       Tika tika = new Tika();
       BufferedReader inputStream = null;
       PrintWriter outputStream = null;
@@ -123,8 +123,8 @@ public class Container {
     inFName = file.getCanonicalPath();
     fName = file.getName().toLowerCase();
     setoutFName(outFName);
-    test(file);
-    test2(file);
+    rename(file);
+    parser(file);
         
 
     }
