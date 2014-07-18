@@ -38,14 +38,14 @@ public class Container {
   public static void setoutFName(File outfName2){
       outFName = outfName2;
   }
-  public static String docUji(File file) throws Exception{
+  public static File docUji(File file) throws Exception{
       String absolutePath = file.getAbsolutePath();
       //String filePath = absolutePath.substring(0,absolutePath.lastIndexOf(File.separator));
       setAddress(address);
       setFName(absolutePath);
       rename(file);
       parser(file);
-      return outFName.getName();
+      return outFName;
   }
   public static void rename(File file) throws Exception{
     inFName = getFName();

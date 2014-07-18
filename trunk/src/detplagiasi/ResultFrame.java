@@ -6,6 +6,8 @@
 
 package detplagiasi;
 
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
@@ -19,7 +21,7 @@ public class ResultFrame extends javax.swing.JFrame {
     private JTable jTabel = new JTable();
     private DefaultTableModel DfltTblMode;
     private TableColumn column;
-    static String method;
+    static String method, ha;
     
     public ResultFrame() {
         initComponents();
@@ -60,7 +62,13 @@ public class ResultFrame extends javax.swing.JFrame {
         column = jTabel.getColumnModel().getColumn(1);
         column.setPreferredWidth(360);
         column = jTabel.getColumnModel().getColumn(2);
-        column.setPreferredWidth(80);
+        column.setPreferredWidth(100);
+        //jTabel.setEnabled(false);
+        //jTabel.setEditingColumn(false);
+        
+        
+        
+        
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -99,15 +107,22 @@ public class ResultFrame extends javax.swing.JFrame {
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                true, false, false
+                false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
+        jTable1.setColumnSelectionAllowed(true);
         jTable1.getTableHeader().setReorderingAllowed(false);
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
+        jTable1.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         if (jTable1.getColumnModel().getColumnCount() > 0) {
             jTable1.getColumnModel().getColumn(0).setResizable(false);
             jTable1.getColumnModel().getColumn(1).setResizable(false);
@@ -187,9 +202,9 @@ public class ResultFrame extends javax.swing.JFrame {
                     .addComponent(jLabel2)
                     .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(jLabel4))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel5))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
@@ -212,6 +227,19 @@ public class ResultFrame extends javax.swing.JFrame {
         this.setVisible(false);
     }//GEN-LAST:event_btnBackActionPerformed
 
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        //if (evt.getClickCount() == 2) {
+            JTable target = (JTable)evt.getSource();
+            int row = target.getSelectedRow();
+            
+            ha = jTable1.getValueAt(row, 1).toString();
+            System.out.println(ha);
+            ResultDetail rd = new ResultDetail();
+            rd.setVisible(true);
+        //}
+    }//GEN-LAST:event_jTable1MouseClicked
+    
+    
     /**
      * @param args the command line arguments
      */
