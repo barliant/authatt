@@ -21,8 +21,10 @@ public class DetPlagGUI extends javax.swing.JFrame {
      * Creates new form NewJFrame
      */
 
-    static File dataset, doc, output;
+    static File dataset, doc, output,a;
     String datasetPath, docPath, outPath;
+    static File[] fileC;
+    
     Container container = new Container();
     Clustering clusterer = new Clustering();
     
@@ -263,7 +265,7 @@ public class DetPlagGUI extends javax.swing.JFrame {
         
     }//GEN-LAST:event_processBActionPerformed
 
-    private void prosesApp(){
+    public void prosesApp(){
         if(!"".equals(datasetLoc.getText()) && (!"".equals(docLoc.getText())) &&(!"".equals(outputLoc.getText()))){
             try {
                 File folder, ax;
@@ -274,12 +276,13 @@ public class DetPlagGUI extends javax.swing.JFrame {
                 System.out.println(file.length);
                 System.out.println(datasetPath);
                 System.out.println(docPath);
-                String a = Container.docUji(doc);
+                a = Container.docUji(doc);
                 System.out.println(a);
                 if(file.length!=0){
                     for (File file1 : file) {
                         if (file1.isFile()) {
                             Container.simpanFile(file1);
+                            System.out.println("condition if is used");
                         } else if (file1.isDirectory()) {
                             ax = new File(file1.getAbsolutePath());
                             System.out.println("folder name : "+ax);
@@ -287,15 +290,25 @@ public class DetPlagGUI extends javax.swing.JFrame {
                             for(int l=0; l<file2.length;l++){
                                 System.out.println("file ke "+(l+1)+":"+ file2[l]);
                                 Container.simpanFile(file2[l]);
+                                System.out.println("condition if else is used");
                             }
                         }
                     }
-                    File[] fileC = new File[file.length + file2.length];
-                    System.arraycopy(file, 0, fileC, 0, file.length);
-                    System.arraycopy(file2, 0, fileC, file.length, file2.length);
-                    for(int ss=0;ss<file.length;ss++){
-                        System.out.println(fileC[ss]);
+                    if(file2!=null){
+                        //jika terdapat folder di dalam folder,menggabungkan semua file yg terdapat di dalamnya ke dalam array baru fileC.
+                        fileC = new File[file.length + file2.length];
+                        System.arraycopy(file, 0, fileC, 0, file.length);
+                        System.arraycopy(file2, 0, fileC, file.length, file2.length);
+                        for(int ss=0;ss<fileC.length;ss++){
+                            System.out.println("ini isi fileC"+fileC[ss]);
+                        }
+                    }else{ //jika tidak ada folder dalam folder
+                        fileC= new File[file.length];
+                        for(int ss=0;ss<file.length;ss++){
+                            System.out.println("ini isi fileC"+fileC[ss]);
+                        }
                     }
+                    
                     if(em.isSelected()){
                         clusterer.method=1;
                         ResultFrame.setMethod("EM Algorithm");
