@@ -6,6 +6,7 @@ package detplagiasi;
 
 import java.awt.Cursor;
 import java.io.File;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
@@ -24,6 +25,8 @@ public class DetPlagGUI extends javax.swing.JFrame {
     static File dataset, doc, output,a;
     String datasetPath, docPath, outPath;
     static File[] fileC;
+    static String runningTime;
+    long startTime = 0, endTime = 0, elapsed, hours, minutes, seconds;
     
     Container container = new Container();
     Clustering clusterer = new Clustering();
@@ -31,6 +34,7 @@ public class DetPlagGUI extends javax.swing.JFrame {
 
     public DetPlagGUI() {
         initComponents();
+        
     }
 
     /**
@@ -206,7 +210,7 @@ public class DetPlagGUI extends javax.swing.JFrame {
                     .addComponent(processB)
                     .addComponent(resetB)
                     .addComponent(btnExit))
-                .addContainerGap(68, Short.MAX_VALUE))
+                .addContainerGap(69, Short.MAX_VALUE))
         );
 
         pack();
@@ -257,8 +261,13 @@ public class DetPlagGUI extends javax.swing.JFrame {
     private void processBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_processBActionPerformed
         
         super.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        //s.start();
+        startTime = System.currentTimeMillis();
         prosesApp();
+        endTime = System.currentTimeMillis();
+        //s.stop();
         super.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+        runningTime = getElapsedTime();
         ResultFrame rf = new ResultFrame();
         rf.setVisible(true);
         
@@ -267,70 +276,74 @@ public class DetPlagGUI extends javax.swing.JFrame {
 
     public void prosesApp(){
         if(!"".equals(datasetLoc.getText()) && (!"".equals(docLoc.getText())) &&(!"".equals(outputLoc.getText()))){
-            try {
-                File folder, ax;
-                folder = new File(datasetLoc.getText());
-                Container.setAddress(outPath);
-                File[] file = folder.listFiles();
-                File[] file2 = null;
-                System.out.println(file.length);
-                System.out.println(datasetPath);
-                System.out.println(docPath);
-                a = Container.docUji(doc);
-                System.out.println(a);
-                if(file.length!=0){
-                    for (File file1 : file) {
-                        if (file1.isFile()) {
-                            Container.simpanFile(file1);
-                            System.out.println("condition if is used");
-                        } else if (file1.isDirectory()) {
-                            ax = new File(file1.getAbsolutePath());
-                            System.out.println("folder name : "+ax);
-                            file2 = file1.listFiles();
-                            for(int l=0; l<file2.length;l++){
-                                System.out.println("file ke "+(l+1)+":"+ file2[l]);
-                                Container.simpanFile(file2[l]);
-                                System.out.println("condition if else is used");
+            if((em.isSelected()) || (kmeans.isSelected())){
+                
+            
+                try {
+                    File folder, ax;
+                    folder = new File(datasetLoc.getText());
+                    Container.setAddress(outPath);
+                    File[] file = folder.listFiles();
+                    File[] file2 = null;
+                    System.out.println(file.length);
+                    System.out.println(datasetPath);
+                    System.out.println(docPath);
+                    a = Container.docUji(doc);
+                    System.out.println(a);
+                    if(file.length!=0){
+                        for (File file1 : file) {
+                            if (file1.isFile()) {
+                                Container.simpanFile(file1);
+                                System.out.println("condition if is used");
+                            } else if (file1.isDirectory()) {
+                                ax = new File(file1.getAbsolutePath());
+                                System.out.println("folder name : "+ax);
+                                file2 = file1.listFiles();
+                                for(int l=0; l<file2.length;l++){
+                                    System.out.println("file ke "+(l+1)+":"+ file2[l]);
+                                    Container.simpanFile(file2[l]);
+                                    System.out.println("condition if else is used");
+                                }
                             }
                         }
-                    }
-                    if(file2!=null){
-                        //jika terdapat folder di dalam folder,menggabungkan semua file yg terdapat di dalamnya ke dalam array baru fileC.
-                        fileC = new File[file.length + file2.length];
-                        System.arraycopy(file, 0, fileC, 0, file.length);
-                        System.arraycopy(file2, 0, fileC, file.length, file2.length);
-                        for(int ss=0;ss<fileC.length;ss++){
-                            System.out.println("ini isi fileC"+fileC[ss]);
+                        if(file2!=null){
+                            //jika terdapat folder di dalam folder,menggabungkan semua file yg terdapat di dalamnya ke dalam array baru fileC.
+                            fileC = new File[file.length + file2.length];
+                            System.arraycopy(file, 0, fileC, 0, file.length);
+                            System.arraycopy(file2, 0, fileC, file.length, file2.length);
+                            for(int ss=0;ss<fileC.length;ss++){
+                                System.out.println("ini isi fileC"+fileC[ss]);
+                            }
+                        }else{ //jika tidak ada folder dalam folder
+                            fileC= new File[file.length];
+                            for(int ss=0;ss<file.length;ss++){
+                                System.out.println("ini isi fileC"+fileC[ss]);
+                            }
                         }
-                    }else{ //jika tidak ada folder dalam folder
-                        fileC= new File[file.length];
-                        for(int ss=0;ss<file.length;ss++){
-                            System.out.println("ini isi fileC"+fileC[ss]);
-                        }
-                    }
-                    
-                    if(em.isSelected()){
-                        clusterer.method=1;
-                        ResultFrame.setMethod("EM Algorithm");
-                        clusterer.startCluster(fileC);
-                        //a =clusterer.td.fileName[1];
-                    }else if(kmeans.isSelected()){
-                        clusterer.method=2;
-                        ResultFrame.setMethod("Simple KMeans Algorithm");
-                        clusterer.startCluster(fileC);
-                    }else{
-                        JOptionPane.showMessageDialog(null, "Please choose your algorithm", "Error", JOptionPane.ERROR_MESSAGE);
-                    }
-                }else{
-                    JOptionPane.showMessageDialog(null, "Folder is empty", "Error", JOptionPane.ERROR_MESSAGE);
-                }
 
-            } catch (Exception ex) {
-                //System.out.println(files.length);
-                Logger.getLogger(DetPlagGUI.class.getName()).log(Level.SEVERE, null, ex);
+                        if(em.isSelected()){
+                            clusterer.method=1;
+                            ResultFrame.setMethod("EM Algorithm");
+                            clusterer.startCluster(fileC);
+                            //a =clusterer.td.fileName[1];
+                        }else if(kmeans.isSelected()){
+                            clusterer.method=2;
+                            ResultFrame.setMethod("Simple KMeans Algorithm");
+                            clusterer.startCluster(fileC);
+                        }
+                    }else{
+                        JOptionPane.showMessageDialog(null, "Folder is empty", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+
+                } catch (Exception ex) {
+                    //System.out.println(files.length);
+                    Logger.getLogger(DetPlagGUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }else{
+                JOptionPane.showMessageDialog(null, "Please choose your algorithm", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }else{
-            JOptionPane.showMessageDialog(null,  "Fill out first", "Input Kosong", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null,  "Silahkan lengkapi semua field terlebih dahulu.", "Input Kosong", JOptionPane.ERROR_MESSAGE);
         }
     }
     
@@ -343,7 +356,24 @@ public class DetPlagGUI extends javax.swing.JFrame {
     private void btnExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExitActionPerformed
         System.exit(0);
     }//GEN-LAST:event_btnExitActionPerformed
-       /**
+    public String getElapsedTime() {
+        elapsed = (endTime - startTime);
+        hours = TimeUnit.MILLISECONDS.toHours(elapsed);
+        elapsed -= TimeUnit.HOURS.toMillis(hours);
+        minutes = TimeUnit.MILLISECONDS.toMinutes(elapsed);
+        elapsed -= TimeUnit.MINUTES.toMillis(minutes);
+        seconds = TimeUnit.MILLISECONDS.toSeconds(elapsed);
+        StringBuilder sb = new StringBuilder(64);
+        sb.append(hours);
+        sb.append(" Hours ");
+        sb.append(minutes);
+        sb.append(" Minutes ");
+        sb.append(seconds);
+        sb.append(" Seconds");
+
+        return(sb.toString());
+    }
+    /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
